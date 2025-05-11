@@ -1,0 +1,87 @@
+/* 强制应用Hind Madurai字体 */
+html, body, div, span, p, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* 使用@font-face强制加载字体，添加时间戳防止缓存 */
+@font-face {
+    font-family: 'Hind Madurai';
+    src: local('Hind Madurai Light'),
+         url('HindMadurai-Light.ttf?v=1.4') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: local('Hind Madurai Regular'),
+         url('HindMadurai-Regular.ttf?v=1.4') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: local('Hind Madurai Medium'),
+         url('HindMadurai-Medium.ttf?v=1.4') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: local('Hind Madurai SemiBold'),
+         url('HindMadurai-SemiBold.ttf?v=1.4') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: local('Hind Madurai Bold'),
+         url('HindMadurai-Bold.ttf?v=1.4') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: block;
+}
+
+/* 为按钮特别指定字体 */
+.btn {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 500 !important;
+}
+
+/* 不同元素不同粗细 */
+h1 {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 300 !important;
+}
+
+h2, h3 {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 500 !important;
+}
+
+p, div, span {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.btn-primary, .btn-secondary {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 600 !important;
+}
+
+/* 指定特定元素使用Hind Madurai字体 */
+#game-container * {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* 强制应用所有标签 */
+body, button, a, input, select, textarea, label, li, ul, ol, table, tr, td, th {
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+} 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重置字体缓存</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 600px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2563EB;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #4B5563;
+        }
+        .button {
+            background-color: #2563EB;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #1D4ED8;
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        .fonts-loaded {
+            margin-top: 20px;
+            display: none;
+            color: #059669;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>正在重置字体缓存</h1>
+        <p>这个页面正在加载新的Hind Madurai字体，并清除浏览器缓存。</p>
+        
+        <div id="loading" class="loading">
+            <p>正在加载字体...</p>
+        </div>
+        
+        <div id="fonts-loaded" class="fonts-loaded">
+            <p>✓ 字体已成功加载!</p>
+        </div>
+        
+        <a href="index.html?nocache=true" class="button" id="continue-btn">继续到游戏</a>
+    </div>
+    
+    <script>
+        // 添加时间戳防止缓存
+        const timestamp = new Date().getTime();
+        
+        // 显示加载状态
+        document.getElementById('loading').style.display = 'block';
+        
+        // 加载字体
+        const fonts = [
+            'HindMadurai-Light.ttf',
+            'HindMadurai-Regular.ttf',
+            'HindMadurai-Medium.ttf',
+            'HindMadurai-SemiBold.ttf',
+            'HindMadurai-Bold.ttf'
+        ];
+        
+        // 预加载字体函数
+        async function preloadFonts() {
+            const fontPromises = fonts.map(font => {
+                return new Promise((resolve, reject) => {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.href = `${font}?t=${timestamp}`;
+                    link.as = 'font';
+                    link.type = 'font/ttf';
+                    link.crossOrigin = 'anonymous';
+                    link.onload = resolve;
+                    link.onerror = reject;
+                    document.head.appendChild(link);
+                    
+                    // 强制加载字体
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @font-face {
+                            font-family: 'Hind Madurai Preview';
+                            src: url('${font}?t=${timestamp}') format('truetype');
+                            font-display: swap;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                });
+            });
+            
+            try {
+                await Promise.all(fontPromises);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('fonts-loaded').style.display = 'block';
+                
+                // 更新继续按钮链接
+                document.getElementById('continue-btn').href = `index.html?nocache=${timestamp}`;
+            } catch (error) {
+                console.error('加载字体失败:', error);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        // 加载字体
+        preloadFonts();
+    </script>
+</body>
+</html> 

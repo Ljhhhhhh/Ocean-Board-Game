@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fact图片测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f7ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+        }
+        .fact-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .fact-content {
+            flex: 1 1 550px;
+        }
+        .fact-image-container {
+            flex: 1 1 280px;
+        }
+        .test-cases {
+            margin-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+        }
+        .test-case {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .test-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fact图片补丁测试</h1>
+        
+        <div class="fact-layout">
+            <div class="fact-content">
+                <h2>测试说明</h2>
+                <p>本页面用于测试fact_image_patch.js文件对图片占位符的处理效果。</p>
+                <p>以下是几种不同的占位符场景，可以通过点击按钮应用补丁并查看效果。</p>
+            </div>
+            
+            <div class="fact-image-container">
+                <button id="apply-patch">应用补丁</button>
+                <button id="toggle-year">切换年份</button>
+                <p>当前测试年份: <span id="current-year">1</span></p>
+            </div>
+        </div>
+        
+        <div class="test-cases">
+            <div class="test-case">
+                <div class="test-title">场景1: 标准占位符容器</div>
+                <div class="fact-layout">
+                    <div class="fact-content">
+                        <p>这是标准的占位符容器，有蓝色背景和emoji图标。</p>
+                    </div>
+                    
+                    <div class="fact-image-container">
+                        <div id="test-case-1" style="width: 100%; padding-bottom: 75%; background-color: rgba(59, 130, 246, 0.1); border-radius: 0.75rem; position: relative; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); border: 1px solid rgba(59, 130, 246, 0.2);">
+                            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem; color: #3B82F6;">🖼️</div>
+                                <p style="margin: 0; color: #3B82F6; font-size: 0.9rem;">Image Placeholder</p>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4B5563; font-size: 0.9rem;">Image related to "Test Case 1"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-case">
+                <div class="test-title">场景2: 只有文本的占位符</div>
+                <div class="fact-layout">
+                    <div class="fact-content">
+                        <p>这个占位符没有emoji图标，只有文本。</p>
+                    </div>
+                    
+                    <div class="fact-image-container">
+                        <div id="test-case-2" style="width: 100%; padding-bottom: 75%; background-color: rgba(59, 130, 246, 0.1); border-radius: 0.75rem; position: relative;">
+                            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <p style="margin: 0; color: #3B82F6; font-size: 0.9rem;">Image Placeholder</p>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4B5563; font-size: 0.9rem;">Image related to "Test Case 2"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-case">
+                <div class="test-title">场景3: 已有图片的情况</div>
+                <div class="fact-layout">
+                    <div class="fact-content">
+                        <p>这个场景已经有一个占位符图片，但需要替换为正确的年份图片。</p>
+                    </div>
+                    
+                    <div class="fact-image-container">
+                        <div id="test-case-3" style="width: 100%; padding-bottom: 75%; background-color: rgba(59, 130, 246, 0.1); border-radius: 0.75rem; position: relative; overflow: hidden;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMmU4ZjAiIC8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMjZweCIgZmlsbD0iIzk0YTNiOCI+cGxhY2Vob2xkZXIgaW1hZ2U8L3RleHQ+PC9zdmc+" alt="Placeholder Image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p style="text-align: center; color: #4B5563; font-size: 0.9rem;">Image related to "Test Case 3"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟游戏状态
+        window.gameState = {
+            currentEvent: {
+                year: 1,
+                factContent: {
+                    title: "测试事件标题"
+                }
+            }
+        };
+        
+        // 当页面加载完成后
+        document.addEventListener('DOMContentLoaded', function() {
+            const applyPatchButton = document.getElementById('apply-patch');
+            const toggleYearButton = document.getElementById('toggle-year');
+            const currentYearSpan = document.getElementById('current-year');
+            
+            // 点击应用补丁按钮
+            applyPatchButton.addEventListener('click', function() {
+                // 动态加载补丁脚本
+                const script = document.createElement('script');
+                script.src = 'fact_image_patch.js';
+                script.onload = function() {
+                    console.log('补丁脚本已加载');
+                    
+                    // 执行占位符检查和替换
+                    if (typeof findAndReplaceAllPlaceholders === 'function') {
+                        findAndReplaceAllPlaceholders();
+                    }
+                };
+                document.head.appendChild(script);
+            });
+            
+            // 点击切换年份按钮
+            toggleYearButton.addEventListener('click', function() {
+                // 循环切换年份1-10
+                const currentYear = parseInt(currentYearSpan.textContent);
+                const newYear = currentYear >= 10 ? 1 : currentYear + 1;
+                
+                // 更新游戏状态
+                window.gameState.currentEvent.year = newYear;
+                currentYearSpan.textContent = newYear;
+                
+                // 如果补丁已加载，刷新图片
+                if (typeof window.refreshFactImages === 'function') {
+                    window.refreshFactImages();
+                } else {
+                    console.log('补丁尚未加载，请先点击"应用补丁"按钮');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

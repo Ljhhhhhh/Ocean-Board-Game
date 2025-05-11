@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean of Possibilities Game</title>
+    <!-- 强制刷新缓存的meta标签 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- 添加随机参数防止缓存 -->
+    <link rel="stylesheet" href="styles.css?v=1.5">
+    
+    <!-- 直接加载字体 -->
+    <script src="direct-load.js?v=1.5"></script>
+    
+    <!-- 先加载字体CSS -->
+    <link rel="stylesheet" href="force-font.css?v=1.5">
+    
+    <style>
+        /* 内联字体样式，确保浏览器立即应用 */
+        @font-face {
+            font-family: 'Hind Madurai';
+            src: url('HindMadurai-Regular.ttf?v=1.5') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: block;
+        }
+        
+        @font-face {
+            font-family: 'Hind Madurai';
+            src: url('HindMadurai-Bold.ttf?v=1.5') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+            font-display: block;
+        }
+        
+        html, body, div, span, p, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container" class="game-container">
+        <!-- Game content will be rendered here -->
+    </div>
+    
+    <script>
+        // 强制重新加载所有字体
+        const timestamp = new Date().getTime();
+        const fonts = ['HindMadurai-Light.ttf', 'HindMadurai-Regular.ttf', 'HindMadurai-Medium.ttf', 'HindMadurai-SemiBold.ttf', 'HindMadurai-Bold.ttf'];
+        
+        fonts.forEach(font => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.href = `${font}?t=${timestamp}`;
+            link.as = 'font';
+            link.type = 'font/ttf';
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+        });
+        
+        // 强制让浏览器应用新字体
+        document.fonts.ready.then(() => {
+            console.log('字体已加载完成');
+            document.documentElement.style.fontFamily = 'Hind Madurai, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            document.body.style.fontFamily = 'Hind Madurai, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        });
+    </script>
+    
+    <script src="script.js?v=1.5"></script>
+</body>
+</html>

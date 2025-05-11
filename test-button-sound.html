@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按钮音效测试</title>
+    <style>
+        body {
+            font-family: 'Hind Madurai', Arial, sans-serif;
+            background-color: #f0f7ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%);
+            color: white;
+        }
+        .btn-secondary {
+            background: linear-gradient(90deg, #64748b 0%, #94a3b8 100%);
+            color: white;
+        }
+        .btn-success {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            color: white;
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+            color: white;
+        }
+        .btn-disabled {
+            background: linear-gradient(90deg, #cbd5e1 0%, #e2e8f0 100%);
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .btn:hover:not(.btn-disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .btn:active:not(.btn-disabled) {
+            transform: scale(0.98);
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .dynamic-section {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>按钮音效测试</h1>
+        
+        <p>点击任意按钮以测试音效。您可以使用下方的控制面板调整音效音量。</p>
+        
+        <div class="button-grid">
+            <button class="btn btn-primary">主要按钮</button>
+            <button class="btn btn-secondary">次要按钮</button>
+            <button class="btn btn-success">成功按钮</button>
+            <button class="btn btn-danger">危险按钮</button>
+            <button class="btn btn-disabled" disabled>禁用按钮</button>
+        </div>
+        
+        <div class="controls">
+            <div class="volume-control">
+                <label for="volume">音效音量:</label>
+                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+                <span id="volume-value">50%</span>
+            </div>
+            
+            <button id="play-sound" class="btn btn-primary">手动播放音效</button>
+        </div>
+        
+        <div class="dynamic-section">
+            <h2>动态创建的按钮</h2>
+            <p>以下按钮是通过JavaScript动态创建的，用于测试动态按钮的音效。</p>
+            
+            <div id="dynamic-buttons"></div>
+            
+            <button id="add-button" class="btn btn-primary" style="margin-top: 1rem;">添加新按钮</button>
+        </div>
+    </div>
+    
+    <!-- 加载按钮音效脚本 -->
+    <script src="button-sound.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 音量控制
+            const volumeSlider = document.getElementById('volume');
+            const volumeValue = document.getElementById('volume-value');
+            const playButton = document.getElementById('play-sound');
+            const addButton = document.getElementById('add-button');
+            const dynamicButtonsContainer = document.getElementById('dynamic-buttons');
+            
+            // 初始化音频对象
+            const buttonSound = new Audio('notification.mp3');
+            buttonSound.volume = volumeSlider.value;
+            
+            // 音量滑块事件
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value;
+                volumeValue.textContent = Math.round(volume * 100) + '%';
+                
+                // 更新音频池中所有音频的音量
+                if (window.audioPool) {
+                    window.audioPool.forEach(item => {
+                        item.audio.volume = volume;
+                    });
+                }
+            });
+            
+            // 手动播放音效按钮
+            playButton.addEventListener('click', function() {
+                if (typeof window.playButtonSound === 'function') {
+                    window.playButtonSound();
+                } else {
+                    // 如果全局函数不可用，使用本地音频对象
+                    buttonSound.currentTime = 0;
+                    buttonSound.play();
+                }
+            });
+            
+            // 动态添加按钮
+            let buttonCount = 0;
+            addButton.addEventListener('click', function() {
+                buttonCount++;
+                
+                const newButton = document.createElement('button');
+                newButton.className = 'btn btn-primary';
+                newButton.textContent = `动态按钮 ${buttonCount}`;
+                newButton.style.margin = '0.5rem';
+                
+                dynamicButtonsContainer.appendChild(newButton);
+            });
+        });
+    </script>
+</body>
+</html> 

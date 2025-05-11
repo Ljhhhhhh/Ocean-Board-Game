@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重载游戏</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f0f9ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #3b82f6;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            color: #4b5563;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.25);
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+        
+        .success {
+            color: #10b981;
+            font-weight: bold;
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .fonts-loaded {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>重新加载游戏</h1>
+        <p>游戏正在使用全新的字体 Hind Madurai，需要清除浏览器缓存并重新加载所有资源。</p>
+        
+        <div>
+            <button id="load-btn" class="btn">重新加载游戏</button>
+            <a href="index.html" class="btn btn-secondary">直接进入</a>
+        </div>
+        
+        <div id="progress" class="progress">
+            <p class="loading-text">正在清理缓存并加载字体...</p>
+        </div>
+        
+        <div id="success" class="success">
+            <p>✓ 所有资源已更新，正在跳转...</p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('load-btn').addEventListener('click', function() {
+            // 显示进度
+            document.getElementById('progress').style.display = 'block';
+            
+            // 清除缓存
+            const timestamp = new Date().getTime();
+            
+            // 预加载字体
+            const fontFiles = [
+                'HindMadurai-Light.ttf',
+                'HindMadurai-Regular.ttf',
+                'HindMadurai-Medium.ttf',
+                'HindMadurai-SemiBold.ttf',
+                'HindMadurai-Bold.ttf'
+            ];
+            
+            // 创建字体加载Promise数组
+            const fontPromises = fontFiles.map(fontFile => {
+                return new Promise((resolve, reject) => {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.href = `${fontFile}?t=${timestamp}`;
+                    link.as = 'font';
+                    link.type = 'font/ttf';
+                    link.crossOrigin = 'anonymous';
+                    link.onload = resolve;
+                    link.onerror = reject;
+                    document.head.appendChild(link);
+                    
+                    // 强制加载字体
+                    const font = new FontFace(
+                        'Hind Madurai',
+                        `url('${fontFile}?t=${timestamp}')`,
+                        { 
+                            weight: fontFile.includes('Light') ? '300' : 
+                                   fontFile.includes('Regular') ? '400' :
+                                   fontFile.includes('Medium') ? '500' :
+                                   fontFile.includes('SemiBold') ? '600' : '700',
+                            display: 'block'
+                        }
+                    );
+                    
+                    font.load().then(loaded => {
+                        document.fonts.add(loaded);
+                    }).catch(err => {
+                        console.error('字体加载失败:', err);
+                    });
+                });
+            });
+            
+            // 加载其他资源
+            const resourcePromises = [
+                fetch(`styles.css?t=${timestamp}`),
+                fetch(`script.js?t=${timestamp}`),
+                fetch(`force-font.css?t=${timestamp}`),
+                fetch(`direct-load.js?t=${timestamp}`)
+            ];
+            
+            // 合并所有Promise
+            Promise.all([...fontPromises, ...resourcePromises])
+                .then(() => {
+                    // 显示成功
+                    document.getElementById('success').style.display = 'block';
+                    document.getElementById('progress').style.display = 'none';
+                    
+                    // 2秒后跳转
+                    setTimeout(() => {
+                        window.location.href = `index.html?nocache=${timestamp}`;
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('资源加载失败:', error);
+                    document.querySelector('.loading-text').textContent = '加载失败，请直接进入游戏';
+                });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,111 @@
+// 调试辅助工具
+console.log('调试助手已加载');
+
+// 监听DOM变化
+function setupDOMMonitor() {
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // 检查是否添加了fact-image元素
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) { // 元素节点
+                        const factImage = node.querySelector('[id^="fact-image-"]');
+                        if (factImage) {
+                            console.log('检测到fact-image元素添加:', factImage.id);
+                        }
+                        
+                        // 检查是否有75%的padding-bottom元素(可能是图片占位符)
+                        const possiblePlaceholders = node.querySelectorAll('div[style*="paddingBottom: 75%"]');
+                        if (possiblePlaceholders.length > 0) {
+                            console.log('检测到可能的图片占位符:', possiblePlaceholders.length);
+                            
+                            // 自动尝试注入图片
+                            setTimeout(() => {
+                                const currentYear = window.gameState?.currentEvent?.year;
+                                if (currentYear) {
+                                    console.log('检测到当前年份:', currentYear);
+                                    
+                                    // 为占位符添加ID
+                                    possiblePlaceholders.forEach((placeholder, index) => {
+                                        if (!placeholder.id) {
+                                            placeholder.id = `debug-placeholder-${currentYear}-${index}`;
+                                            console.log('为占位符添加ID:', placeholder.id);
+                                        }
+                                        
+                                        // 尝试手动注入图片
+                                        injectImage(placeholder, currentYear);
+                                    });
+                                }
+                            }, 200);
+                        }
+                    }
+                });
+            }
+        });
+    });
+    
+    // 开始观察文档变化
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    console.log('DOM变化监视器已启动');
+}
+
+// 手动注入图片函数
+function injectImage(container, year) {
+    console.log(`手动注入年份${year}图片到`, container);
+    
+    // 保存容器原来的样式
+    const originalStyles = {
+        width: container.style.width,
+        paddingBottom: container.style.paddingBottom,
+        position: container.style.position
+    };
+    
+    // 确保容器有正确的样式
+    container.style.width = '100%';
+    container.style.paddingBottom = '75%';
+    container.style.position = 'relative';
+    container.style.overflow = 'hidden';
+    
+    // 创建图片元素
+    const img = document.createElement('img');
+    img.src = `year${year}.png`;
+    img.alt = `Year ${year} image`;
+    img.style.position = 'absolute';
+    img.style.top = '0';
+    img.style.left = '0';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.objectPosition = 'center';
+    
+    // 添加加载事件
+    img.onload = function() {
+        console.log(`调试助手: 年份${year}图片加载成功`);
+        // 图片加载成功时，可以在这里添加额外处理
+    };
+    
+    img.onerror = function() {
+        console.log(`调试助手: 年份${year}图片加载失败`);
+        // 恢复容器原样式
+        Object.assign(container.style, originalStyles);
+    };
+    
+    // 清空容器并添加图片
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+    
+    container.appendChild(img);
+}
+
+// 在页面加载完成后初始化
+window.addEventListener('load', function() {
+    console.log('初始化调试助手...');
+    setTimeout(() => {
+        setupDOMMonitor();
+    }, 1000);
+}); 

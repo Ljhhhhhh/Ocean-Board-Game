@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 强制刷新字体和样式
+    const style = document.createElement('style');
+    style.textContent = `
+        @font-face {
+            font-family: 'Hind Madurai';
+            src: url('HindMadurai-Regular.ttf?t=${Date.now()}') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        * {
+            font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
     // Game state
     const gameState = {
         currentScreen: 'start',
@@ -34,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         educator: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M67.269 44.025H78.6621V75H67.269M67.269 44.025V75M67.269 44.025V37.9724H54.4517V43.669M67.269 75H54.4517M54.4517 75V43.669M54.4517 75H43.0586M54.4517 43.669H43.0586M43.0586 43.669V75M43.0586 43.669V34.056H33.0897V40.8207M43.0586 75H33.0897M33.0897 75H21.6966V40.8207H33.0897M33.0897 75V40.8207M25.969 46.5172H28.8172M25.969 69.3034H28.8172M37.006 39.3966H39.1422M37.006 69.3034H39.1422M46.975 49.3655H50.5353M46.975 69.3034H50.5353M58.3681 43.669H63.3526M58.3681 69.3034H63.3526M71.1853 49.3655H75.1017M71.1853 69.3034H75.1017M16 36.0897L50.1793 19L84.3586 36.0897" stroke="white" stroke-width="2.27862" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         politician: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M28.7659 54.087L28.2635 50.174H72.1053L71.5471 54.087M28.7659 54.087L31.5793 76H68.4212L71.5471 54.087M28.7659 54.087H20.5268L15.0005 43.1305M15.0005 43.1305V38.4348C14.9906 37.841 15.1303 37.6488 15.7373 37.6522H81.3158M15.0005 43.1305H85M85 43.1305L79.4737 54.087H71.5471M85 43.1305V38.4348C84.9866 37.8916 84.8915 37.6628 84.2632 37.6521L81.3158 37.6522M81.3158 37.6522C81.4174 33.2523 80.774 31.1181 77.6316 28.2609M77.6316 28.2609C78.8456 27.2939 78.7369 25.5218 78.3685 24.3479C78 23.1739 76.8948 22 75.0527 22C72.8422 22 72.1955 24.0607 72.1053 24.3478C71.7369 25.5217 71.8129 27.1676 72.8422 28.2609C73.9187 29.4044 76.158 29.4348 77.6316 28.2609Z" stroke="white" stroke-width="3" stroke-linejoin="round"/></svg>`,
         business: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M58.2617 30.5087V25.8605C58.2617 23.7151 57.189 23 55.0437 23H44.3169C41.814 23 40.7413 24.0727 40.7413 25.8605V30.5087H24.2937C20.6739 30.3893 19.9546 31.3442 20.003 34.0843V53.7499M79 61.9738V70.9127C79 73.4156 78.2849 75.2034 75.0669 75.2034C75.0669 75.2034 26.7966 75.2034 24.2937 75.2034C21.7908 75.2034 19.9145 73.9345 20.003 70.9127V53.7499M64.3402 30.5087H75.0669C77.9655 30.5284 79 31.5814 79 34.7994V54.4651C79 57.3255 77.2122 57.3255 75.0669 57.3255H53.971M20.003 53.7499C20.003 55.8953 21.0757 57.3255 23.221 57.3255C25.3664 57.3255 44.6745 57.3255 44.6745 57.3255V52.6773C44.6863 51.8961 44.9014 51.6426 45.7472 51.6046H52.5408C53.6638 51.635 53.9622 51.8785 53.971 52.6773V61.9738C53.9976 62.8167 53.971 63.0464 53.2559 63.0464C52.5407 63.0464 46.1047 63.0464 46.1047 63.0464" stroke="white" stroke-width="3.09508" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-        scientist: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M42.9721 23C46.172 23 53.372 23 56.572 23M42.9721 23C39.7721 23 39.7721 17 42.9721 17C46.172 17 53.372 17 56.572 17C59.7721 17 59.7721 23 56.572 23M42.9721 23V27M56.572 23V33.4C60.9459 36.9928 62.172 37.4307 67.7721 42.6C73.3721 47.7693 77.7277 63 67.7721 74.2C66.4206 75.7204 64.9421 77.0197 63.3721 78.1018M42.9721 27H47.7721M42.9721 27V31.8M42.9721 31.8V33.4C38.1665 37.1886 37.3971 37.4 32.1721 42.6C26.947 47.8 21.7719 62.2 31.372 73.4C33.1528 75.4776 35.1829 77.1974 37.3721 78.549M42.9721 31.8H50.1721M50.1721 74.6V71.4M50.1721 59L51.7721 55.4M50.1721 59L47.7721 58.6M50.1721 59V66.8M51.7721 55.4C50.9721 53 51.135 51.2193 51.7721 50.2C53.7721 47 56.6758 46.448 62.5721 45C61.7737 49.3869 60.5721 53.6667 58.5721 55C56.5721 56.3333 54.1721 56.2 51.7721 55.4ZM47.7721 58.6C46.9721 55.8 46.0468 54.6034 44.1721 53.8C41.3721 52.6 38.2057 54.2647 34.5721 55.4C36.9721 58.6 39.3472 61.4 42.5721 61.4C44.9721 61.4 46.0479 60.6952 47.7721 58.6ZM50.1721 66.8L53.3721 65.8M50.1721 66.8V71.4M53.3721 65.8C53.3721 63.4 54.1721 62.2694 55.3721 61.4C56.5721 60.5306 59.7721 59.8 64.5721 61C62.5243 64.2861 61.6211 66.4755 58.9721 67.8C56.5721 69 54.5721 67.8 53.3721 65.8ZM37.3721 78.549C38.2659 77.2746 38.8847 76.4437 40.1721 75.8C40.9721 75.4 41.7402 75.21 43.7721 75.4C45.8748 73.1697 46.9721 72.2 50.1721 71.4M37.3721 78.549C45.3822 83.4947 55.522 83.5124 63.3721 78.1018M50.1721 71.4C52.2855 71.7121 53.4907 72.0591 55.7721 73.8C57.6336 73.9404 58.581 74.24 60.1721 75C62.4077 76.2154 62.9014 76.8935 63.3721 78.1018" stroke="white" stroke-width="2.56" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        scientist: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M42.9721 23C46.172 23 53.372 23 56.572 23M42.9721 23C39.7721 23 39.7721 17 42.9721 17C46.172 17 53.372 17 56.572 17C59.7721 17 59.7721 23 56.572 23M42.9721 23V27M56.572 23V33.4C60.9459 36.9928 62.172 37.4307 67.7721 42.6C73.3721 47.7693 77.7277 63 67.7721 74.2C66.4206 75.7204 64.9421 77.0197 63.3721 78.1018M42.9721 27H47.7721M42.9721 27V41.8M42.9721 41.8V43.4C38.1665 47.1886 37.3971 47.4 32.1721 42.6C26.947 47.8 21.7719 62.2 31.372 73.4C33.1528 75.4776 35.1829 77.1974 37.3721 78.549M42.9721 41.8H50.1721M50.1721 74.6V71.4M50.1721 59L51.7721 55.4M50.1721 59L47.7721 58.6M50.1721 59V66.8M51.7721 55.4C50.9721 53 51.135 51.2193 51.7721 50.2C53.7721 47 56.6758 46.448 62.5721 45C61.7737 49.3869 60.5721 53.6667 58.5721 55C56.5721 56.3333 54.1721 56.2 51.7721 55.4ZM47.7721 58.6C46.9721 55.8 46.0468 54.6034 44.1721 53.8C41.3721 52.6 38.2057 54.2647 34.5721 55.4C36.9721 58.6 39.3472 61.4 42.5721 61.4C44.9721 61.4 46.0479 60.6952 47.7721 58.6ZM50.1721 66.8L53.3721 65.8M50.1721 66.8V71.4M53.3721 65.8C53.3721 63.4 54.1721 62.2694 55.3721 61.4C56.5721 60.5306 59.7721 59.8 64.5721 61C62.5243 64.2861 61.6211 66.4755 58.9721 67.8C56.5721 69 54.5721 67.8 53.3721 65.8ZM37.3721 78.549C38.2659 77.2746 38.8847 76.4437 40.1721 75.8C40.9721 75.4 41.7402 75.21 43.7721 75.4C45.8748 73.1697 46.9721 72.2 50.1721 71.4M37.3721 78.549C45.3822 83.4947 55.522 83.5124 63.3721 78.1018M50.1721 71.4C52.2855 71.7121 53.4907 72.0591 55.7721 73.8C57.6336 73.9404 58.581 74.24 60.1721 75C62.4077 76.2154 62.9014 76.8935 63.3721 78.1018" stroke="white" stroke-width="2.56" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         fisher: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M57.9904 32.6301V18.0827M57.9904 32.6301C54.3884 32.9607 54.3884 37.5894 57.9904 37.9201M57.9904 32.6301C61.5922 32.9607 61.5922 37.5894 57.9904 37.9201M57.9904 37.9201V72.9661C57.9904 80.9011 72.0706 80.9011 72.0706 72.9661V66.023M72.0706 66.023L68.7962 69.6599M72.0706 66.023L76 69.6599M28.8475 49.4919H27.2103C24.2632 49.4919 24.2632 55.7737 27.2103 55.7737H28.5201M28.8475 49.4919C29.3796 42.0699 30.791 38.8741 35.7239 35.2751M28.8475 49.4919H48.1669M35.7239 35.2751H41.618M35.7239 35.2751L36.3787 19.7358C37.0336 17.4214 39.9807 17.4214 40.6356 19.7358L41.618 35.2751M41.618 35.2751C46.7351 40.1399 48.0089 43.2965 48.1669 49.4919M48.1669 49.4919H49.4767C52.0962 49.4919 52.0962 55.7737 49.4767 55.7737H48.4943M28.5201 55.7737C29.4384 63.4271 31.4326 66.354 36.7062 69.9905M28.5201 55.7737H48.4943M36.7062 69.9905H40.3082M36.7062 69.9905L37.3611 78.2561C37.6886 79.248 39.3258 79.248 39.6533 78.2561L40.3082 69.9905M40.3082 69.9905C45.5473 67.0149 47.1497 64.5726 48.4943 55.7737" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         influencer: `<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#2080D3"/><path d="M34.5 26.9H35.1M38.7 26.9H45M37.5 72.8H44.4M57 49.4C57 49.4 57 70.1 57 72.8C57 75.5 56.1001 76.1 53.4 76.1C50.6999 76.1 30.2999 76.1 27.6 76.1C24.9001 76.1 24 74.9 24 72.8C24 70.7 24 28.1 24 26C24 23.9 24.9 23 27.6 23C30.3 23 50.4 23 53.4 23C56.4 23 57 24.2 57 26C57 27.8 57 49.4 57 49.4ZM57 49.4H64.2M64.2 70.1C62.4001 70.1 61.2 70.1 61.2 68.6C61.2 67.1 60.9999 31 61 29C61.0001 27 64 27.5 64.8001 27.5M68.4 68H73.2M68.4 71.9H73.2M37.2 49.1L44.1 44.6M37.8 51.8L43.8 55.1M64.8 65.3C64.7999 66.8 64.8 73.1 64.8 74.6C64.8 76.1 64.8 76.1 66.3 76.1C67.8 76.1 74.3999 76.1 75.6 76.1C76.8001 76.1 76.8001 76.1 76.8 74.6C76.7999 73.1 76.7999 66.8 76.8 65.3C76.8001 63.8 76.8001 63.8 75.3 63.8C73.7999 63.8 67.7999 63.8 66.3 63.8C64.8001 63.8 64.8001 63.8 64.8 65.3ZM64.8 24.2V33.8C64.8001 35 64.8 35 66 35H75.6C76.8 35 76.8 35 76.8 33.8V24.2C76.8 23 76.8 23 75.3 23H66.3C65 23.0001 64.8001 23 64.8 24.2ZM64.5 44.6C64.5 46.2469 64.5 54.2 64.5 54.2C64.5 55.7 64.5 55.7 66.3 55.7H75.3C76.8 55.7 76.8 55.7 76.8 54.2V44.6C76.8 43.1 76.8 43.1 75.3 43.1H66C64.5 43.1 64.5 42.9531 64.5 44.6Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="34.8001" cy="50.6" r="2.6" fill="white" stroke="white" stroke-width="2"/><circle cx="46.2001" cy="43.4" r="2.6" fill="white" stroke="white" stroke-width="2"/><circle cx="46.2001" cy="56" r="2.6" fill="white" stroke="white" stroke-width="2"/><path d="M68.5967 27.1774C69.3001 26.3 70.3072 27.0083 70.8001 27.8C71.293 27.0083 72.3001 26.3 73.0326 27.1774C74.0019 28.3385 71.8882 30.1912 70.8147 31.4C69.3364 29.7722 67.6601 28.3458 68.5967 27.1774Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M69.0001 52.4V46.4L73.2001 49.4L69.0001 52.4Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
     };
@@ -47,24 +63,24 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Seaside Development",
             description: "One of the seaside area in your city is looking underdeveloped. Some are suggesting to build a harbor.",
             options: [
-                {
-                    id: "A",
+                { 
+                    id: "A", 
                     text: "Build Large Harbor.",
-                    effectsDisplay: "Fisher credit -10. All other Personal Credit +10.",
+                    effectsDisplay: "Fisher credit -5. All other Personal Credit +10.",
                     effects: { industrialStance: 20, ecologicalStance: 0 },
                     additionalDeck: "1A"
                 },
-                {
-                    id: "B",
+                { 
+                    id: "B", 
                     text: "Reject harbor proposal.",
                     effectsDisplay: "No immediate Credit change.",
                     effects: { industrialStance: 0, ecologicalStance: 10 },
                     additionalDeck: ""
                 },
-                {
-                    id: "C",
-                    text: "Build fishing infrastructure.",
-                    effectsDisplay: "Fisher Credit+5.",
+                { 
+                    id: "C", 
+                    text: "Build fishing infrastructure.", 
+                    effectsDisplay: "Fisher Credit +10.",
                     effects: { industrialStance: 10, ecologicalStance: 0 },
                     additionalDeck: ""
                 }
@@ -416,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
             factContent: {
                 title: "Real Story: Tsunami Recovery and Urban Choices",
                 introduction: "After the 2011 Tōhoku earthquake and tsunami, Japanese cities faced tough decisions on rebuilding. Some areas rebuilt quickly, while others created new ecological buffer zones. Delays in funding and planning left some communities in limbo for years.",
-                impact: "Rapid reconstruction restores livelihoods but can risk future safety. Ecological buffers protect against future disasters but require relocation. Delays can cause economic and social hardship.",
+                impact: "Rapid reconstruction restores livelihoods but can risk future safety. Ecological buffers protect against future disasters but disrupt communities. Delays in planning can erode trust and slow recovery.",
                 consequences: [
                     "Quick rebuilding can boost morale but may ignore long-term risks.",
                     "Ecological buffers reduce disaster risk but disrupt communities.",
@@ -809,25 +825,25 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 logoContainer.style.opacity = '1';
                 logoContainer.style.transform = 'translateY(0) scale(1)';
+            
+            setTimeout(() => {
+                titleContainer.style.opacity = '1';
+                titleContainer.style.transform = 'translateY(0)';
                 
+                // 标题装饰线延迟展开
                 setTimeout(() => {
-                    titleContainer.style.opacity = '1';
-                    titleContainer.style.transform = 'translateY(0)';
+                    titleDecoration.style.width = '70%';
                     
-                    // 标题装饰线延迟展开
                     setTimeout(() => {
-                        titleDecoration.style.width = '70%';
+                        description.style.opacity = '1';
+                        description.style.transform = 'translateY(0)';
                         
                         setTimeout(() => {
-                            description.style.opacity = '1';
-                            description.style.transform = 'translateY(0)';
-                            
-                            setTimeout(() => {
-                                buttonContainer.style.opacity = '1';
-                                buttonContainer.style.transform = 'translateY(0)';
+                            buttonContainer.style.opacity = '1';
+                            buttonContainer.style.transform = 'translateY(0)';
                             }, 500);
                         }, 500);
-                    }, 800);
+                }, 800);
                 }, 500);
             }, 500);
         }, 300);
@@ -945,7 +961,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 svg.style.margin = '0';
             }
         } else {
-            icon.textContent = character.icon;
+        icon.textContent = character.icon;
         }
         iconOuter.appendChild(icon);
         
@@ -1073,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (SVG_ICONS[character.id]) {
                 iconContainer.innerHTML = SVG_ICONS[character.id].replace(/width="60"/g,'width="60"').replace(/height="60"/g,'height="60"');
             } else {
-                iconContainer.textContent = character.icon;
+            iconContainer.textContent = character.icon;
                 iconContainer.style.fontSize = '3.5rem';
             }
             iconsBar.appendChild(iconContainer);
@@ -1112,7 +1128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Story paragraphs
         const paragraph1 = document.createElement('p');
         paragraph1.className = 'story-paragraph';
-        paragraph1.textContent = 'In a bold move to secure the future, your country has announced the founding of a new seaside city.';
+        paragraph1.innerHTML = '<strong style="font-size:1.25rem;color:#2563EB;">In a bold move to secure the future, your country has announced the founding of a new seaside city.</strong>';
         paragraph1.style.opacity = '0';
         paragraph1.style.transform = 'translateY(20px)';
         paragraph1.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
@@ -1218,7 +1234,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
             return;
         }
-
+        
         // 指标容器 - 恢复原设计但增加动画
         const metricsContainer = document.createElement('div');
         metricsContainer.className = 'metrics-container';
@@ -1614,7 +1630,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 optionCard.addEventListener('mouseout', () => {
                     if (!isLocked && selectedOptionId !== option.id) {
-                        optionCard.style.backgroundColor = '#F9FAFB';
+                    optionCard.style.backgroundColor = '#F9FAFB';
                         optionCard.style.boxShadow = '0 2px 6px rgba(0,0,0,0.05)';
                         optionCard.style.transform = 'translateY(0) scale(1)';
                         optionCard.style.borderColor = '#E5E7EB';
@@ -1727,6 +1743,10 @@ document.addEventListener('DOMContentLoaded', function() {
             summaryContainer.style.borderRadius = '0.5rem';
             summaryContainer.style.padding = '1.5rem';
             summaryContainer.style.marginBottom = '2rem';
+            summaryContainer.style.position = 'relative'; // 添加相对定位以便放置View Facts按钮
+            summaryContainer.style.display = 'flex'; // 使用flex布局
+            summaryContainer.style.flexDirection = 'column'; // 垂直排列
+            summaryContainer.style.alignItems = 'center'; // 水平居中
             const summaryTitle = document.createElement('h3');
             summaryTitle.textContent = 'Decision Summary';
             summaryTitle.style.textAlign = 'center';
@@ -1741,56 +1761,78 @@ document.addEventListener('DOMContentLoaded', function() {
             const effects = document.createElement('p');
             effects.textContent = gameState.selectedOption.effectsDisplay;
             effects.style.textAlign = 'center';
-            effects.style.margin = '0 0 1rem 0';
-            effects.style.color = '#4B5563';
+            effects.style.color = '#2563EB'; // 改为蓝色
+            effects.style.fontWeight = '700'; // 加粗显示效果文本
+            effects.style.fontSize = '1.1rem'; // 增加字体大小
+            effects.style.padding = '0.5rem 1rem'; // 添加内边距
+            effects.style.backgroundColor = 'rgba(219, 234, 254, 0.5)'; // 添加淡蓝色背景
+            effects.style.borderRadius = '0.5rem'; // 圆角边框
+            effects.style.display = 'table'; // 改为table元素以便居中
+            effects.style.margin = '0 auto 1rem auto'; // 居中显示
             
             // 修改添加抽卡内容显示逻辑
             const deckInfo = document.createElement('p');
             if (gameState.selectedOption.additionalDeck) {
-                deckInfo.textContent = `Add Additional Deck (${gameState.selectedOption.additionalDeck}) into your Events Deck.`;
-                deckInfo.style.textAlign = 'center';
-                deckInfo.style.fontSize = '0.875rem';
-                deckInfo.style.margin = '0';
-                deckInfo.style.color = '#2563EB'; // 添加蓝色突显
-                deckInfo.style.fontWeight = '600'; // 加粗显示
+            deckInfo.textContent = `Add Additional Deck (${gameState.selectedOption.additionalDeck}) into your Events Deck.`;
+            deckInfo.style.textAlign = 'center';
+            deckInfo.style.fontSize = '1rem'; // 增加字体大小
+            deckInfo.style.margin = '0 auto'; // 居中显示
+            deckInfo.style.color = '#2563EB'; // 添加蓝色突显
+            deckInfo.style.fontWeight = '700'; // 加粗显示额外卡组信息
+            deckInfo.style.padding = '0.5rem 1rem'; // 添加内边距
+            deckInfo.style.backgroundColor = 'rgba(219, 234, 254, 0.7)'; // 添加更深蓝色背景
+            deckInfo.style.borderRadius = '0.5rem'; // 圆角边框
+            deckInfo.style.display = 'table'; // 改为table元素以便居中
+            deckInfo.style.margin = '0 auto'; // 居中显示
+            deckInfo.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'; // 添加轻微阴影
             }
             
             summaryContainer.appendChild(summaryTitle);
             summaryContainer.appendChild(chosenOption);
             summaryContainer.appendChild(effects);
             if (gameState.selectedOption.additionalDeck) {
-                summaryContainer.appendChild(deckInfo);
+            summaryContainer.appendChild(deckInfo);
             }
             
-            const instruction = document.createElement('p');
-            instruction.textContent = 'Each person should draw 1 card from the Event Deck. Solve the drawn Event Card collectively, then proceed to the next person.';
-            instruction.style.textAlign = 'center';
-            instruction.style.margin = '0 0 2rem 0';
-            // 查看事实按钮
-            const viewFactsContainer = document.createElement('div');
-            viewFactsContainer.style.display = 'flex';
-            viewFactsContainer.style.justifyContent = 'center';
-            viewFactsContainer.style.marginBottom = '2rem';
+            // 添加View Facts按钮到summaryContainer右上角
             const viewFactsButton = document.createElement('button');
-            viewFactsButton.className = 'btn btn-secondary btn-medium';
+            viewFactsButton.className = 'btn btn-secondary';
+            viewFactsButton.style.position = 'absolute';
+            viewFactsButton.style.right = '1rem';
+            viewFactsButton.style.top = '1rem';
             viewFactsButton.style.display = 'flex';
             viewFactsButton.style.alignItems = 'center';
-            viewFactsButton.style.gap = '0.5rem';
-            viewFactsButton.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            viewFactsButton.style.justifyContent = 'center';
+            viewFactsButton.style.gap = '0.25rem';
+            viewFactsButton.style.padding = '0.5rem 1rem';
+            viewFactsButton.style.fontSize = '0.9rem';
+            viewFactsButton.style.borderRadius = '0.75rem';
+            viewFactsButton.style.backgroundColor = 'white';
+            viewFactsButton.style.border = '1px solid #2563EB';
+            viewFactsButton.style.color = '#2563EB';
+            viewFactsButton.style.fontWeight = '500';
+            viewFactsButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+            viewFactsButton.style.transition = 'all 0.3s ease';
+            
+            // 添加悬停效果
             viewFactsButton.addEventListener('mouseover', () => {
-                viewFactsButton.style.transform = 'translateY(-3px)';
-                viewFactsButton.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                viewFactsButton.style.transform = 'translateY(-2px)';
+                viewFactsButton.style.boxShadow = '0 4px 8px rgba(37, 99, 235, 0.2)';
             });
+            
             viewFactsButton.addEventListener('mouseout', () => {
                 viewFactsButton.style.transform = 'translateY(0)';
-                viewFactsButton.style.boxShadow = 'none';
+                viewFactsButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
             });
+            
             viewFactsButton.addEventListener('mousedown', () => {
                 viewFactsButton.style.transform = 'scale(0.98)';
             });
+            
             viewFactsButton.addEventListener('mouseup', () => {
-                viewFactsButton.style.transform = 'scale(1)';
+                viewFactsButton.style.transform = 'translateY(-2px)';
             });
+            
             const factIcon = document.createElement('span');
             factIcon.textContent = '🔍';
             viewFactsButton.appendChild(factIcon);
@@ -1798,10 +1840,16 @@ document.addEventListener('DOMContentLoaded', function() {
             viewFactsButton.addEventListener('click', () => {
                 transitionToScreen('fact-view');
             });
-            viewFactsContainer.appendChild(viewFactsButton);
+            
+            summaryContainer.appendChild(viewFactsButton);
+            
+            const instruction = document.createElement('p');
+            instruction.textContent = 'Each person should draw 1 card from the Event Deck. Solve the drawn Event Card collectively, then proceed to the next person.';
+            instruction.style.textAlign = 'center';
+            instruction.style.margin = '0 0 2rem 0';
+            
             eventCard.appendChild(summaryContainer);
             eventCard.appendChild(instruction);
-            eventCard.appendChild(viewFactsContainer);
         }
         // CONTINUE按钮区域
         const continueButtonContainer = document.createElement('div');
@@ -1832,33 +1880,33 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 增强CONTINUE按钮的交互动画
         continueButton.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background 0.3s ease';
-        continueButton.addEventListener('mouseover', () => {
+            continueButton.addEventListener('mouseover', () => {
             if (!continueButton.disabled) {
                 continueButton.style.transform = 'translateY(-5px) scale(1.05)';
                 continueButton.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.25)';
             }
         });
-        continueButton.addEventListener('mouseout', () => {
+            continueButton.addEventListener('mouseout', () => {
             if (!continueButton.disabled) {
                 continueButton.style.transform = 'translateY(0) scale(1)';
                 continueButton.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.15)';
             }
         });
-        continueButton.addEventListener('mousedown', () => {
+            continueButton.addEventListener('mousedown', () => {
             if (!continueButton.disabled) {
                 continueButton.style.transform = 'translateY(0) scale(0.97)';
                 continueButton.style.boxShadow = '0 2px 6px rgba(59, 130, 246, 0.12)';
             }
-        });
-        continueButton.addEventListener('mouseup', () => {
+            });
+            continueButton.addEventListener('mouseup', () => {
             if (!continueButton.disabled) {
                 continueButton.style.transform = 'translateY(-5px) scale(1.05)';
                 continueButton.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.25)';
             }
-        });
-        
+            });
+            
         // 添加点击事件处理器
-        continueButton.addEventListener('click', () => {
+            continueButton.addEventListener('click', () => {
             if (continueButton.disabled) return;
             // 如果还没进入决策摘要，点击CONTINUE时才正式提交选项
             if (!gameState.selectedOption && selectedOptionId) {
@@ -1879,12 +1927,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 直接进入小事件抽卡页面
                 gameState.recordEventDrawn = gameState.selectedCharacters.map(() => false);
                 transitionToScreen('record-event-card-draw');
-            } else {
+                } else {
                 // 兼容性处理，正常流程不会走到这里
                 gameState.recordEventDrawn = gameState.selectedCharacters.map(() => false);
                 transitionToScreen('record-event-card-draw');
-            }
-        });
+                }
+            });
         
         continueButtonContainer.appendChild(continueButton);
         
@@ -1935,33 +1983,82 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const factContent = gameState.currentEvent.factContent;
         
-        // Create fact container
+        // 创建外层居中容器
+        const outerContainer = document.createElement('div');
+        outerContainer.style.display = 'flex';
+        outerContainer.style.flexDirection = 'column';
+        outerContainer.style.alignItems = 'center';
+        outerContainer.style.justifyContent = 'center';
+        outerContainer.style.minHeight = '90vh';
+        outerContainer.style.padding = '2rem 0';
+        
+        // Create fact container with improved styling
         const factContainer = document.createElement('div');
         factContainer.className = 'fact-container';
+        factContainer.style.width = '100%';
+        factContainer.style.maxWidth = '900px';
+        factContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+        factContainer.style.borderRadius = '1rem';
+        factContainer.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+        factContainer.style.overflow = 'hidden';
         
         // Header section with title and back button
         const factHeader = document.createElement('div');
         factHeader.className = 'fact-header';
+        factHeader.style.display = 'flex';
+        factHeader.style.justifyContent = 'space-between';
+        factHeader.style.alignItems = 'center';
+        factHeader.style.padding = '1.5rem 2rem';
+        factHeader.style.borderBottom = '1px solid rgba(0, 0, 0, 0.1)';
         
         const headerLeft = document.createElement('div');
         
         const yearLabel = document.createElement('h2');
         yearLabel.textContent = `Year ${gameState.currentEvent.year}`;
+        yearLabel.style.margin = '0 0 0.5rem 0';
+        yearLabel.style.fontSize = '1.2rem';
+        yearLabel.style.color = '#4B5563';
         
         const eventTitle = document.createElement('h3');
         eventTitle.textContent = gameState.currentEvent.title;
+        eventTitle.style.margin = '0';
+        eventTitle.style.fontSize = '1.8rem';
+        eventTitle.style.color = '#2563EB';
         
         const divider = document.createElement('div');
         divider.className = 'event-divider';
         divider.style.margin = '0.5rem 0 0 0';
+        divider.style.height = '3px';
+        divider.style.width = '60px';
+        divider.style.backgroundColor = '#3B82F6';
+        divider.style.borderRadius = '1.5px';
         
         headerLeft.appendChild(yearLabel);
         headerLeft.appendChild(eventTitle);
         headerLeft.appendChild(divider);
         
+        // 增大Back按钮
         const backButton = document.createElement('button');
-        backButton.className = 'btn btn-secondary btn-small';
+        backButton.className = 'btn btn-secondary';
         backButton.textContent = 'Back';
+        backButton.style.fontSize = '1.1rem';
+        backButton.style.fontWeight = '600';
+        backButton.style.padding = '0.8rem 1.8rem';
+        backButton.style.borderRadius = '0.75rem';
+        backButton.style.transition = 'all 0.3s ease';
+        backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.08)';
+        
+        // 添加悬停效果
+        backButton.addEventListener('mouseover', () => {
+            backButton.style.transform = 'translateY(-3px)';
+            backButton.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.12)';
+        });
+        
+        backButton.addEventListener('mouseout', () => {
+            backButton.style.transform = 'translateY(0)';
+            backButton.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.08)';
+        });
+        
         backButton.addEventListener('click', () => {
             gameState.factShown = false;
             renderScreen('main-game');
@@ -1970,9 +2067,17 @@ document.addEventListener('DOMContentLoaded', function() {
         factHeader.appendChild(headerLeft);
         factHeader.appendChild(backButton);
         
-        // Fact content section
+        // 创建两列布局容器
+        const contentLayout = document.createElement('div');
+        contentLayout.style.display = 'flex';
+        contentLayout.style.flexWrap = 'wrap';
+        contentLayout.style.padding = '2rem';
+        contentLayout.style.gap = '2rem';
+        
+        // Fact content section (左侧)
         const factContentDiv = document.createElement('div');
         factContentDiv.className = 'fact-content';
+        factContentDiv.style.flex = '1 1 550px';
         
         const factBox = document.createElement('div');
         factBox.className = 'fact-box';
@@ -1981,25 +2086,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const factTitle = document.createElement('h2');
         factTitle.className = 'fact-title';
         factTitle.textContent = factContent.title;
+        factTitle.style.fontSize = '1.8rem';
+        factTitle.style.color = '#2563EB';
+        factTitle.style.margin = '0 0 1.5rem 0';
         
         // Introduction paragraph
         const introductionPara = document.createElement('p');
         introductionPara.className = 'fact-paragraph';
         introductionPara.textContent = factContent.introduction;
+        introductionPara.style.lineHeight = '1.6';
+        introductionPara.style.marginBottom = '1.5rem';
         
         // Impact paragraph
         const impactPara = document.createElement('p');
         impactPara.className = 'fact-paragraph';
         impactPara.textContent = factContent.impact;
+        impactPara.style.lineHeight = '1.6';
+        impactPara.style.marginBottom = '1.5rem';
         
         // Consequences list
         const consequencesList = document.createElement('ol');
         consequencesList.className = 'fact-list';
+        consequencesList.style.paddingLeft = '1.5rem';
+        consequencesList.style.marginBottom = '1.5rem';
         
         factContent.consequences.forEach(item => {
             const listItem = document.createElement('li');
             listItem.className = 'fact-list-item';
             listItem.textContent = item;
+            listItem.style.padding = '0.5rem 0';
+            listItem.style.lineHeight = '1.5';
             consequencesList.appendChild(listItem);
         });
         
@@ -2007,11 +2123,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const conclusionPara = document.createElement('p');
         conclusionPara.className = 'fact-paragraph';
         conclusionPara.textContent = factContent.conclusion;
+        conclusionPara.style.lineHeight = '1.6';
+        conclusionPara.style.marginBottom = '1.5rem';
         
         // Attribution
         const attribution = document.createElement('p');
         attribution.className = 'fact-attribution';
         attribution.textContent = factContent.attribution;
+        attribution.style.fontStyle = 'italic';
+        attribution.style.color = '#6B7280';
+        attribution.style.fontSize = '0.9rem';
         
         // Append all fact content elements
         factBox.appendChild(factTitle);
@@ -2023,15 +2144,110 @@ document.addEventListener('DOMContentLoaded', function() {
         
         factContentDiv.appendChild(factBox);
         
-        // Append all sections to fact container
+        // 图片区域 (右侧)
+        const imageContainer = document.createElement('div');
+        imageContainer.style.flex = '1 1 280px';
+        imageContainer.style.display = 'flex';
+        imageContainer.style.flexDirection = 'column';
+        imageContainer.style.justifyContent = 'flex-start';
+        imageContainer.style.alignItems = 'center';
+        
+        // 图片容器
+        const imagePlaceholder = document.createElement('div');
+        imagePlaceholder.style.width = '100%';
+        imagePlaceholder.style.paddingBottom = '75%'; // 4:3 比例
+        imagePlaceholder.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+        imagePlaceholder.style.borderRadius = '0.75rem';
+        imagePlaceholder.style.marginBottom = '1rem';
+        imagePlaceholder.style.position = 'relative';
+        imagePlaceholder.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)';
+        imagePlaceholder.style.border = '1px solid rgba(59, 130, 246, 0.2)';
+        imagePlaceholder.style.overflow = 'hidden'; // 添加overflow:hidden确保图片不会溢出容器
+        
+        // 根据当前年份创建图片元素
+        const yearImage = document.createElement('img');
+        yearImage.src = `year${gameState.currentEvent.year}.png`; // 年份图片命名规则
+        yearImage.alt = `Image for Year ${gameState.currentEvent.year}`;
+        yearImage.style.position = 'absolute';
+        yearImage.style.width = '100%';
+        yearImage.style.height = '100%';
+        yearImage.style.objectFit = 'cover'; // 保持比例填充容器
+        yearImage.style.objectPosition = 'center'; // 居中显示图片
+        
+        // 为年份图片添加加载事件处理
+        yearImage.addEventListener('load', () => {
+            // 图片加载成功后隐藏占位符图标
+            if (imageIcon) {
+                imageIcon.style.display = 'none';
+            }
+        });
+        
+        yearImage.addEventListener('error', () => {
+            // 图片加载失败时显示占位符图标
+            if (imageIcon) {
+                imageIcon.style.display = 'flex';
+            }
+            console.log(`Failed to load image for Year ${gameState.currentEvent.year}`);
+        });
+        
+        // 图片图标和说明 (作为加载前或加载失败的占位符)
+        const imageIcon = document.createElement('div');
+        imageIcon.style.position = 'absolute';
+        imageIcon.style.inset = '0';
+        imageIcon.style.display = 'flex';
+        imageIcon.style.flexDirection = 'column';
+        imageIcon.style.alignItems = 'center';
+        imageIcon.style.justifyContent = 'center';
+        imageIcon.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+        
+        const iconText = document.createElement('div');
+        iconText.textContent = '🖼️';
+        iconText.style.fontSize = '3rem';
+        iconText.style.marginBottom = '1rem';
+        iconText.style.color = '#3B82F6';
+        
+        const placeholderText = document.createElement('p');
+        placeholderText.textContent = 'Loading image...';
+        placeholderText.style.margin = '0';
+        placeholderText.style.color = '#3B82F6';
+        placeholderText.style.fontSize = '0.9rem';
+        
+        imageIcon.appendChild(iconText);
+        imageIcon.appendChild(placeholderText);
+        
+        // 先添加图片，再添加占位符图标(这样图片加载期间或失败时会显示占位符)
+        imagePlaceholder.appendChild(yearImage);
+        imagePlaceholder.appendChild(imageIcon);
+        
+        // 图片说明文本
+        const imageCaption = document.createElement('p');
+        imageCaption.textContent = `Image for Year ${gameState.currentEvent.year}: ${factContent.title}`;
+        imageCaption.style.textAlign = 'center';
+        imageCaption.style.color = '#4B5563';
+        imageCaption.style.fontSize = '0.9rem';
+        imageCaption.style.padding = '0 0.5rem';
+        
+        // 为未来支持真实图片添加ID
+        imagePlaceholder.id = `fact-image-${gameState.currentEvent.year}`;
+        
+        // 添加到图片容器
+        imageContainer.appendChild(imagePlaceholder);
+        imageContainer.appendChild(imageCaption);
+        
+        // 将内容区和图片区添加到布局容器
+        contentLayout.appendChild(factContentDiv);
+        contentLayout.appendChild(imageContainer);
+        
+        // Append sections to fact container
         factContainer.appendChild(factHeader);
-        factContainer.appendChild(factContentDiv);
+        factContainer.appendChild(contentLayout);
         
         // Set flag that fact has been viewed
         gameState.factShown = true;
         
-        // Append fact container to screen
-        screenElement.appendChild(factContainer);
+        // 添加到外层容器并加入屏幕
+        outerContainer.appendChild(factContainer);
+        screenElement.appendChild(outerContainer);
     }
 
     function selectOption(option) {
@@ -3161,20 +3377,23 @@ document.addEventListener('DOMContentLoaded', function() {
         icon.className = 'role-icon';
         icon.style.left = `${x}px`;
         icon.style.top = `${y}px`;
+        icon.style.width = '100px';
+        icon.style.height = '100px';
+        icon.style.display = 'flex';
+        icon.style.justifyContent = 'center';
+        icon.style.alignItems = 'center';
+        icon.style.position = 'absolute';
         
-        if (role === 'educator') {
-            const educatorIcon = document.createElement('div');
-            educatorIcon.className = 'educator-icon';
-            
-            const circle = document.createElement('div');
-            circle.className = 'educator-icon-circle';
-            
-            const book = document.createElement('div');
-            book.className = 'educator-icon-book';
-            
-            educatorIcon.appendChild(circle);
-            educatorIcon.appendChild(book);
-            icon.appendChild(educatorIcon);
+        if (SVG_ICONS[role]) {
+            // 使用SVG图标
+            icon.innerHTML = SVG_ICONS[role];
+            const svg = icon.querySelector('svg');
+            if (svg) {
+                svg.setAttribute('width', '100%');
+                svg.setAttribute('height', '100%');
+                svg.style.display = 'block';
+                svg.style.margin = '0';
+            }
         } else {
             const img = document.createElement('img');
             img.src = `images/${role}.png`;

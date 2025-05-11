@@ -1,12 +1,54 @@
 /* Base Styles */
+/* 导入Hind Madurai字体 */
+@font-face {
+    font-family: 'Hind Madurai';
+    src: url('HindMadurai-Light.ttf?v=1.0') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: url('HindMadurai-Regular.ttf?v=1.0') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: url('HindMadurai-Medium.ttf?v=1.0') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: url('HindMadurai-SemiBold.ttf?v=1.0') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Hind Madurai';
+    src: url('HindMadurai-Bold.ttf?v=1.0') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Hind Madurai', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
     color: #333;
     line-height: 1.6;
     min-height: 100vh;
@@ -748,31 +790,6 @@ h3 {
 
 .character-icon-small:hover {
     transform: scale(1.1);
-}
-
-/* Educator Icon */
-.educator-icon {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-.educator-icon-circle {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: #2080D3;
-    border-radius: 50%;
-}
-
-.educator-icon-book {
-    position: absolute;
-    width: 68.36px;
-    height: 56px;
-    left: 16px;
-    top: 19px;
-    border: 2.28px solid #FFFFFF;
-    border-radius: 4px;
 }
 
 /* 为移动设备添加更好的滚动支持 */
